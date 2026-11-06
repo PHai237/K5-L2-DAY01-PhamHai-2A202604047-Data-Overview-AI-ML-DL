@@ -1,16 +1,16 @@
 # Báo cáo bài thực hành Ngày 1 – Đọc prediction YOLO11 để hiểu định dạng nhãn
 
-**Ngày chạy:** 2026-11-06
+**Ngày chạy:**
 
-**Runtime Colab:** GPU (CUDA)
+**Runtime Colab:** CPU/GPU
 
-**Python / PyTorch / Ultralytics:** Python 3.13.16 / PyTorch 2.11.0+cu130 / Ultralytics 8.4.145
+**Python / PyTorch / Ultralytics:**
 
 **Checkpoint:** `yolo11n-cls.pt`, `yolo11n.pt`, `yolo11n-seg.pt`
 
 **Ngưỡng detection/segmentation dùng khi tạo JSON:** `0.35` (chỉ đổi nếu GV cho phép; nếu đổi hãy ghi rõ)
 
-**Thay đổi so với notebook nguồn:** Không
+**Thay đổi so với notebook nguồn:** Không / mô tả rõ thay đổi
 
 > **Cách dùng mẫu này:** copy/điền trên máy, lưu thành `REPORT.md`, rồi **upload** vào panel Files
 > của Colab (notebook không tự tạo file này). Ô cuối Colab sẽ đóng ZIP cùng `day1_lab_outputs/`.
@@ -68,23 +68,21 @@ Chỉ dùng ảnh `sample_id = kitchen`. Chọn **một** record.
 Số lượng prediction theo ngưỡng: xem output ô so sánh `0.20` / `0.35` / `0.60` trong notebook.
 
 1. Chép một record: `class_name`=… ; `score`=… ; `bbox_xyxy`=[…, …, …, …] ; `bbox_width`=… ; `bbox_height`=…
-```json
 {
-  "class_name": "person",
-  "score": 0.912625,
-  "bbox_xyxy": [
-    385.33,
-    69.24,
-    498.92,
-    348.92
-  ],
-  "bbox_width": 113.58,
-  "bbox_height": 279.68
-}
-```
+    "class_name": "person",
+    "score": 0.912625,
+    "bbox_xyxy": [
+      385.33,
+      69.24,
+      498.92,
+      348.92
+    ],
+    "bbox_width": 113.58,
+    "bbox_height": 279.68
+  }
 
 2. Giải thích box bằng lời thường: góc trên-trái ở đâu, góc dưới-phải ở đâu, rộng/cao bao nhiêu pixel?
-Góc trên-trái ở (385.33, 69.24), góc dưới-phải ở (498.92, 348.92), rộng 113.58 px, cao 279.68 px.
+Góc trên-trái ở [385.33, 69.24], góc dưới-phải ở [498.92, 348.92], rộng 113.58px, cao 279.68px
 
 3. Chọn hai ngưỡng (vd. 0.20 và 0.60). Mỗi ngưỡng có bao nhiêu prediction?
 threshold 0.20 có 17 prediction, threshold 0.6 có 6 prediction
@@ -96,7 +94,7 @@ Người reviewer cần kiểm tra các box được bổ sung sau khi hạ ngư
 Khi gán nhãn, người gán nhãn cần vẽ bounding box ôm sát vật thể, không quá rộng hoặc quá hẹp, để xác định chính xác vị trí và kích thước của vật thể trong ảnh
 
 6. Trên ảnh `kitchen`, chỉ ra **một** vật bị che khuất hoặc cắt mép. Bạn sẽ viết thành quy tắc trong guideline, hay đưa lên hỏi Lab Coach (escalation)? Vì sao?
-Chiếc nồi màu bạc trong ảnh `kitchen` bị bàn che khuất khoảng một nửa. Em sẽ kiểm tra guideline xem đã có quy tắc gán nhãn cho vật thể bị che khuất chưa. Nếu có thì áp dụng, còn nếu chưa có hoặc hướng dẫn chưa rõ thì em sẽ hỏi Lab Coach để xác định cách gán nhãn phù hợp
+Chiếc nồi màu bạc trong ảnh `kitchen` bị bàn che khuất khoảng một nửa. Em sẽ kiểm tra guideline xem đã có quy tắc gán nhãn cho vật thể bị che khuất chưa. Nếu có thì áp dụng, còn nếu chưa có hoặc hướng dẫn chưa rõ thì emn sẽ hỏi Lab Coach để xác định cách gán nhãn phù hợp
 
 ## 3. Phân đoạn theo từng đối tượng
 
@@ -104,36 +102,19 @@ Chiếc nồi màu bạc trong ảnh `kitchen` bị bàn che khuất khoảng m�
 Chỉ dùng ảnh `sample_id = kitchen`. Chọn **một** record.
 
 1. Chép một record: `instance_id`=… ; `class_name`=… ; `score`=… ; số điểm polygon=`polygon_point_count`=… ; 3–5 điểm đầu của `polygon_xy`=…
-```json
 {
   "instance_id": "kitchen-001",
   "class_name": "person",
   "score": 0.899318,
   "polygon_point_count": 348,
   "polygon_xy": [
-    [
-      446.0,
-      70.0
-    ],
-    [
-      445.0,
-      71.0
-    ],
-    [
-      444.0,
-      71.0
-    ],
-    [
-      443.0,
-      72.0
-    ],
-    [
-      442.0,
-      72.0
-    ]
+    [446.0, 70.0],
+    [445.0, 71.0],
+    [444.0, 71.0],
+    [443.0, 72.0],
+    [442.0, 72.0]
   ]
 }
-```
 
 2. So với box, polygon cho thêm thông tin gì về hình dạng vật thể?
 So với bounding box chỉ bao quanh vật thể bằng hình chữ nhật, polygon có thể mô tả hình dạng vật thể sát hơn nhờ nhiều điểm tọa độ tạo thành đường viền
@@ -173,14 +154,14 @@ Em sẽ dừng xử lý và báo ngay cho Lab Coach để được hướng dẫ
 
 Kiểm tra trên GitHub trong thư mục `report/`:
 
-- [ ] `REPORT.md` (file này đã điền)
-- [ ] `day1_lab_outputs/classification_predictions.json`
-- [ ] `day1_lab_outputs/detection_predictions.json`
-- [ ] `day1_lab_outputs/segmentation_predictions.json`
-- [ ] `day1_lab_outputs/IMAGE_ATTRIBUTION.md`
-- [ ] `day1_lab_outputs/visuals/classification_top5.png`
-- [ ] `day1_lab_outputs/visuals/detection_predictions.png`
-- [ ] `day1_lab_outputs/visuals/segmentation_prediction.png`
-- [ ] Ô validation cuối notebook báo `PASS`
-- [ ] Không có họ tên, MSSV hoặc dữ liệu nhạy cảm trong báo cáo/output
-- [ ] Đã nộp **link repository** trên LMS
+- [X] `REPORT.md` (file này đã điền)
+- [X] `day1_lab_outputs/classification_predictions.json`
+- [X] `day1_lab_outputs/detection_predictions.json`
+- [X] `day1_lab_outputs/segmentation_predictions.json`
+- [X] `day1_lab_outputs/IMAGE_ATTRIBUTION.md`
+- [X] `day1_lab_outputs/visuals/classification_top5.png`
+- [X] `day1_lab_outputs/visuals/detection_predictions.png`
+- [X] `day1_lab_outputs/visuals/segmentation_prediction.png`
+- [X] Ô validation cuối notebook báo `PASS`
+- [X] Không có họ tên, MSSV hoặc dữ liệu nhạy cảm trong báo cáo/output
+- [X] Đã nộp **link repository** trên LMS
