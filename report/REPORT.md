@@ -1,10 +1,10 @@
 # Báo cáo bài thực hành Ngày 1 – Đọc prediction YOLO11 để hiểu định dạng nhãn
 
-**Ngày chạy:**
+**Ngày chạy:**2026-11-06
 
-**Runtime Colab:** CPU/GPU
+**Runtime Colab:** GPU (CUDA)
 
-**Python / PyTorch / Ultralytics:**
+**Python / PyTorch / Ultralytics:**Python 3.13.16 / PyTorch 2.11.0+cu130 / Ultralytics 8.4.145
 
 **Checkpoint:** `yolo11n-cls.pt`, `yolo11n.pt`, `yolo11n-seg.pt`
 
